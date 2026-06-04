@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>e-Life - 自主进化人生操作系统</title>
+    <meta name="description" content="一套经过 5,000+ 篇笔记实战验证的知识管理方法论：理论、方法与实践">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #0a0a0f;
+            --bg-card: #12121a;
+            --bg-card-hover: #1a1a26;
+            --text: #e8e8ed;
+            --text-muted: #8888a0;
+            --accent: #6c5ce7;
+            --accent-light: #a29bfe;
+            --gradient-1: linear-gradient(135deg, #6c5ce7, #00cec9);
+            --gradient-2: linear-gradient(135deg, #fd79a8, #6c5ce7);
+            --gradient-3: linear-gradient(135deg, #00cec9, #55efc4);
+            --border: rgba(255,255,255,0.06);
+            --radius: 16px;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', 'Noto Sans SC', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* ====== NAV ====== */
+        nav {
+            position: fixed; top: 0; width: 100%; z-index: 100;
+            background: rgba(10,10,15,0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 0 2rem;
+        }
+        nav .inner {
+            max-width: 1200px; margin: 0 auto;
+            display: flex; align-items: center; justify-content: space-between;
+            height: 64px;
+        }
+        nav .logo {
+            font-size: 1.25rem; font-weight: 700;
+            background: var(--gradient-1);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            letter-spacing: -0.02em;
+        }
+        nav .logo span { font-weight: 300; opacity: 0.7; }
+        nav .links { display: flex; gap: 2rem; }
+        nav a {
+            color: var(--text-muted); text-decoration: none; font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+        nav a:hover { color: var(--text); }
+
+        /* ====== HERO ====== */
+        .hero {
+            min-height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+            text-align: center;
+            padding: 8rem 2rem 6rem;
+            position: relative;
+        }
+        .hero::before {
+            content: '';
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background:
+                radial-gradient(ellipse 600px 400px at 30% 20%, rgba(108,92,231,0.12), transparent),
+                radial-gradient(ellipse 500px 300px at 70% 60%, rgba(0,206,201,0.08), transparent);
+            pointer-events: none;
+        }
+        .hero-content { position: relative; max-width: 800px; }
+        .hero-badge {
+            display: inline-block;
+            padding: 0.4rem 1.2rem;
+            background: rgba(108,92,231,0.1);
+            border: 1px solid rgba(108,92,231,0.3);
+            border-radius: 100px;
+            font-size: 0.85rem; color: var(--accent-light);
+            margin-bottom: 2rem;
+        }
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -0.03em;
+            margin-bottom: 1.5rem;
+        }
+        .hero h1 .gradient {
+            background: var(--gradient-1);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .hero p {
+            font-size: 1.2rem; color: var(--text-muted);
+            max-width: 600px; margin: 0 auto 2.5rem;
+            line-height: 1.8;
+        }
+        .hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+        .btn {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            padding: 0.9rem 2rem;
+            border-radius: 100px;
+            font-size: 1rem; font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        .btn-primary {
+            background: var(--gradient-1);
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(108,92,231,0.3);
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(108,92,231,0.4); }
+        .btn-secondary {
+            background: rgba(255,255,255,0.05);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        .btn-secondary:hover { background: rgba(255,255,255,0.1); }
+
+        /* ====== STATS ====== */
+        .stats {
+            display: grid; grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            max-width: 800px; margin: 0 auto;
+            padding: 0 2rem;
+        }
+        .stat {
+            text-align: center;
+            padding: 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+        }
+        .stat .num {
+            font-size: 2rem; font-weight: 800;
+            background: var(--gradient-1);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .stat .label { font-size: 0.85rem; color: var(--text-muted); margin-top: 0.3rem; }
+
+        /* ====== SECTION ====== */
+        section { padding: 6rem 2rem; }
+        .container { max-width: 1100px; margin: 0 auto; }
+        .section-label {
+            font-size: 0.85rem; font-weight: 600;
+            color: var(--accent-light);
+            text-transform: uppercase; letter-spacing: 0.1em;
+            margin-bottom: 0.75rem;
+        }
+        .section-title {
+            font-size: clamp(1.8rem, 4vw, 2.8rem);
+            font-weight: 700; letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+        }
+        .section-desc {
+            font-size: 1.1rem; color: var(--text-muted);
+            max-width: 600px; margin-bottom: 3rem;
+        }
+
+        /* ====== THEORY CARDS ====== */
+        .theory-grid {
+            display: grid; grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+        .theory-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 2rem;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .theory-card:hover {
+            background: var(--bg-card-hover);
+            border-color: rgba(108,92,231,0.2);
+            transform: translateY(-2px);
+        }
+        .theory-card::before {
+            content: '';
+            position: absolute; top: 0; left: 0; width: 100%; height: 3px;
+            background: var(--gradient-1);
+            opacity: 0; transition: opacity 0.3s;
+        }
+        .theory-card:hover::before { opacity: 1; }
+        .theory-card .icon {
+            width: 48px; height: 48px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 12px; font-size: 1.5rem;
+            margin-bottom: 1.2rem;
+        }
+        .theory-card h3 {
+            font-size: 1.25rem; font-weight: 600;
+            margin-bottom: 0.8rem;
+        }
+        .theory-card p { color: var(--text-muted); font-size: 0.95rem; }
+
+        /* ====== PIPELINE ====== */
+        .pipeline {
+            display: flex; align-items: center; justify-content: center;
+            gap: 0; flex-wrap: wrap;
+            margin: 3rem 0;
+        }
+        .pipeline-step {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem 2rem;
+            text-align: center;
+            min-width: 140px;
+            transition: all 0.3s;
+        }
+        .pipeline-step:hover {
+            border-color: rgba(108,92,231,0.3);
+            background: var(--bg-card-hover);
+        }
+        .pipeline-step .step-icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
+        .pipeline-step .step-name { font-weight: 600; font-size: 0.95rem; }
+        .pipeline-step .step-desc { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.3rem; }
+        .pipeline-arrow {
+            color: var(--accent); font-size: 1.5rem;
+            padding: 0 0.5rem;
+        }
+
+        /* ====== METHOD ====== */
+        .method-grid {
+            display: grid; grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+        .method-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 2rem;
+            transition: all 0.3s;
+        }
+        .method-card:hover {
+            background: var(--bg-card-hover);
+            transform: translateY(-2px);
+        }
+        .method-card h3 {
+            font-size: 1.15rem; font-weight: 600;
+            margin-bottom: 0.8rem;
+            display: flex; align-items: center; gap: 0.5rem;
+        }
+        .method-card p { color: var(--text-muted); font-size: 0.95rem; }
+        .method-card ul {
+            list-style: none; margin-top: 1rem;
+        }
+        .method-card li {
+            padding: 0.4rem 0;
+            color: var(--text-muted); font-size: 0.9rem;
+            display: flex; align-items: flex-start; gap: 0.5rem;
+        }
+        .method-card li::before {
+            content: ''; display: inline-block;
+            width: 6px; height: 6px; border-radius: 50%;
+            background: var(--accent);
+            margin-top: 0.55rem; flex-shrink: 0;
+        }
+
+        /* ====== TAGS ====== */
+        .tag-showcase {
+            display: flex; flex-wrap: wrap; gap: 0.75rem;
+            margin: 2rem 0;
+        }
+        .tag {
+            padding: 0.5rem 1.2rem;
+            border-radius: 100px;
+            font-size: 0.85rem; font-weight: 500;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            transition: all 0.3s;
+        }
+        .tag:hover { border-color: var(--accent); }
+        .tag.dim-arch { border-color: rgba(108,92,231,0.4); color: #a29bfe; }
+        .tag.dim-invest { border-color: rgba(253,121,168,0.4); color: #fd79a8; }
+        .tag.dim-learn { border-color: rgba(0,206,201,0.4); color: #00cec9; }
+        .tag.dim-life { border-color: rgba(85,239,196,0.4); color: #55efc4; }
+        .tag.dim-mgmt { border-color: rgba(255,234,167,0.4); color: #ffeaa7; }
+
+        /* ====== PRACTICE ====== */
+        .practice-timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+        .practice-timeline::before {
+            content: '';
+            position: absolute; left: 0; top: 0; bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--accent), transparent);
+        }
+        .practice-item {
+            position: relative;
+            margin-bottom: 2rem;
+            padding-left: 1.5rem;
+        }
+        .practice-item::before {
+            content: '';
+            position: absolute; left: -2.35rem; top: 0.5rem;
+            width: 12px; height: 12px; border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 10px rgba(108,92,231,0.4);
+        }
+        .practice-item h4 {
+            font-size: 1.1rem; font-weight: 600;
+            margin-bottom: 0.4rem;
+        }
+        .practice-item p { color: var(--text-muted); font-size: 0.95rem; }
+
+        /* ====== CTA ====== */
+        .cta {
+            text-align: center;
+            padding: 6rem 2rem;
+            position: relative;
+        }
+        .cta::before {
+            content: '';
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(ellipse 600px 400px at 50% 50%, rgba(108,92,231,0.1), transparent);
+            pointer-events: none;
+        }
+        .cta h2 {
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            font-weight: 700; margin-bottom: 1rem;
+            position: relative;
+        }
+        .cta p {
+            color: var(--text-muted); font-size: 1.1rem;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        /* ====== FOOTER ====== */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 2rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+        footer a { color: var(--accent-light); text-decoration: none; }
+        footer a:hover { text-decoration: underline; }
+
+        /* ====== RESPONSIVE ====== */
+        @media (max-width: 768px) {
+            .stats { grid-template-columns: repeat(2, 1fr); }
+            .theory-grid, .method-grid { grid-template-columns: 1fr; }
+            .pipeline { flex-direction: column; }
+            .pipeline-arrow { transform: rotate(90deg); }
+            nav .links { display: none; }
+        }
+
+        /* ====== ANIMATION ====== */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-up {
+            opacity: 0;
+            animation: fadeUp 0.6s ease forwards;
+        }
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+    </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+    <div class="inner">
+        <div class="logo">e-Life <span>by Sigma</span></div>
+        <div class="links">
+            <a href="#theory">理论</a>
+            <a href="#method">方法</a>
+            <a href="#practice">实践</a>
+            <a href="https://github.com/zhubao315" target="_blank">GitHub</a>
+        </div>
+    </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+    <div class="hero-content">
+        <div class="hero-badge fade-up">Knowledge Management Framework</div>
+        <h1 class="fade-up delay-1">
+            用知识的<span class="gradient">复利</span><br>驱动人生进化
+        </h1>
+        <p class="fade-up delay-2">
+            一套经过 5,000+ 篇笔记实战验证的知识管理方法论。<br>
+            理论驱动，人机共生，自主进化。
+        </p>
+        <div class="hero-btns fade-up delay-3">
+            <a href="#theory" class="btn btn-primary">探索方法论</a>
+            <a href="https://github.com/zhubao315/e-life-method" target="_blank" class="btn btn-secondary">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                GitHub
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- STATS -->
+<div class="stats fade-up delay-4">
+    <div class="stat">
+        <div class="num">5,286</div>
+        <div class="label">知识笔记</div>
+    </div>
+    <div class="stat">
+        <div class="num">24</div>
+        <div class="label">标准标签</div>
+    </div>
+    <div class="stat">
+        <div class="num">4</div>
+        <div class="label">身份维度</div>
+    </div>
+    <div class="stat">
+        <div class="num">96</div>
+        <div class="label">健康度 A</div>
+    </div>
+</div>
+
+<!-- THEORY -->
+<section id="theory">
+    <div class="container">
+        <div class="section-label">Theory</div>
+        <h2 class="section-title">四大理论基石</h2>
+        <p class="section-desc">从 5,000+ 篇笔记的实战中提炼，经 20+ 轮审计迭代验证。</p>
+
+        <div class="theory-grid">
+            <div class="theory-card">
+                <div class="icon" style="background: rgba(108,92,231,0.1);">📈</div>
+                <h3>知识复利理论</h3>
+                <p>知识的价值不在于拥有多少，而在于连接多少。每篇笔记都是本金，每次连接都是利息。连接密度决定复利价值——100 篇互相链接的笔记，价值远超 100 篇孤立笔记。</p>
+            </div>
+            <div class="theory-card">
+                <div class="icon" style="background: rgba(253,121,168,0.1);">🎭</div>
+                <h3>四维身份模型</h3>
+                <p>人不是单一角色。知识应该按"你是谁"来组织——架构师关注如何构建，投资人关注值不值得，学习者关注为什么，生活艺术家关注怎么活。同一事物在不同视角下有不同价值。</p>
+            </div>
+            <div class="theory-card">
+                <div class="icon" style="background: rgba(0,206,201,0.1);">🪜</div>
+                <h3>知识转化阶梯</h3>
+                <p>从原始输入到原创洞察，经历六层提炼：原始输入 → 概念 → 模型 → 框架 → 原则 → 洞察。每一层提炼都增加可迁移性和复利价值。洞察是最有价值的知识形态。</p>
+            </div>
+            <div class="theory-card">
+                <div class="icon" style="background: rgba(85,239,196,0.1);">🤖</div>
+                <h3>人机共生理论</h3>
+                <p>AI 擅长结构化处理，人类擅长意义理解。最优解不是人或机器独立完成，而是人机协作：人类制定规则，AI 执行维护，AI 报告异常，人类决策处理。</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- KNOWLEDGE PIPELINE -->
+<section style="background: rgba(255,255,255,0.01);">
+    <div class="container" style="text-align: center;">
+        <div class="section-label">Pipeline</div>
+        <h2 class="section-title">知识转化阶梯</h2>
+        <p class="section-desc" style="margin: 0 auto 1rem;">每一层提炼都增加知识的可迁移性和复利价值</p>
+
+        <div class="pipeline">
+            <div class="pipeline-step">
+                <div class="step-icon">📥</div>
+                <div class="step-name">原始输入</div>
+                <div class="step-desc">书摘/笔记/播客</div>
+            </div>
+            <div class="pipeline-arrow">→</div>
+            <div class="pipeline-step">
+                <div class="step-icon">💡</div>
+                <div class="step-name">概念</div>
+                <div class="step-desc">定义和解释</div>
+            </div>
+            <div class="pipeline-arrow">→</div>
+            <div class="pipeline-step">
+                <div class="step-icon">🔬</div>
+                <div class="step-name">模型</div>
+                <div class="step-desc">运作结构</div>
+            </div>
+            <div class="pipeline-arrow">→</div>
+            <div class="pipeline-step">
+                <div class="step-icon">📐</div>
+                <div class="step-name">框架</div>
+                <div class="step-desc">行动结构</div>
+            </div>
+            <div class="pipeline-arrow">→</div>
+            <div class="pipeline-step">
+                <div class="step-icon">⚖️</div>
+                <div class="step-name">原则</div>
+                <div class="step-desc">行动准则</div>
+            </div>
+            <div class="pipeline-arrow">→</div>
+            <div class="pipeline-step" style="border-color: rgba(108,92,231,0.3);">
+                <div class="step-icon">✨</div>
+                <div class="step-name">洞察</div>
+                <div class="step-desc">个人悟道</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- METHOD -->
+<section id="method">
+    <div class="container">
+        <div class="section-label">Method</div>
+        <h2 class="section-title">四大系统方法</h2>
+        <p class="section-desc">可迁移的方法论，不限于特定工具。</p>
+
+        <div class="method-grid">
+            <div class="method-card">
+                <h3>🏗️ 空间架构法</h3>
+                <p>知识库是分层空间，每层有明确功能定位。</p>
+                <ul>
+                    <li>规则层（META）— 定义系统如何运转</li>
+                    <li>思维层（BRAIN）— 提炼后的知识资产</li>
+                    <li>产出层（BUILD）— 正在推进的项目</li>
+                    <li>身份层 — 按四维身份组织的领域知识</li>
+                    <li>输入层（SOURCES）— 原始信息和素材</li>
+                    <li>时间层（CALENDAR）— 按时间组织的记录</li>
+                </ul>
+            </div>
+            <div class="method-card">
+                <h3>🏷️ 双轴标签法</h3>
+                <p>用两个正交的标签轴为每篇笔记定位。</p>
+                <ul>
+                    <li>维度轴（身份）— 架构/投资/学习/生活/管理</li>
+                    <li>类型轴（形态）— 概念/模型/框架/原则/洞察</li>
+                    <li>来源轴（可选）— 阅读/项目/媒体/经历</li>
+                    <li>项目轴（可选）— uRead/uSkill/uWise</li>
+                </ul>
+            </div>
+            <div class="method-card">
+                <h3>🗺️ MOC 导航法</h3>
+                <p>Map of Content 是知识库的导航地图。</p>
+                <ul>
+                    <li>顶层 MOC — 领域入口索引（∑ 主题.md）</li>
+                    <li>目录 README — 每个目录的索引</li>
+                    <li>主题 MOC — 特定主题的聚合索引</li>
+                    <li>用链接而非文件夹实现多归属</li>
+                </ul>
+            </div>
+            <div class="method-card">
+                <h3>🚀 项目驱动法</h3>
+                <p>用项目驱动知识的转化和应用。</p>
+                <ul>
+                    <li>uRead — 读书笔记产品化（输入→加工）</li>
+                    <li>uSkill — 技能卡片库（实践→输出）</li>
+                    <li>uWise — 知识百科（跨领域融合）</li>
+                    <li>每日推进，每周复盘，持续迭代</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- TAGS SHOWCASE -->
+<section style="background: rgba(255,255,255,0.01);">
+    <div class="container" style="text-align: center;">
+        <div class="section-label">Tag System</div>
+        <h2 class="section-title">双轴标签体系</h2>
+        <p class="section-desc" style="margin: 0 auto 1rem;">24 个标准标签，维度（身份）× 类型（知识形态）矩阵分类</p>
+
+        <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">维度轴 — 身份标签</p>
+        <div class="tag-showcase" style="justify-content: center;">
+            <span class="tag dim-arch">维度/架构</span>
+            <span class="tag dim-invest">维度/投资</span>
+            <span class="tag dim-learn">维度/学习</span>
+            <span class="tag dim-life">维度/生活</span>
+            <span class="tag dim-mgmt">维度/管理</span>
+        </div>
+
+        <p style="font-size: 0.9rem; color: var(--text-muted); margin: 1.5rem 0 0.5rem;">类型轴 — 知识形态</p>
+        <div class="tag-showcase" style="justify-content: center;">
+            <span class="tag">类型/概念</span>
+            <span class="tag">类型/模型</span>
+            <span class="tag">类型/框架</span>
+            <span class="tag">类型/原则</span>
+            <span class="tag">类型/洞察</span>
+            <span class="tag">类型/读书笔记</span>
+            <span class="tag">类型/日记</span>
+            <span class="tag">类型/参考</span>
+            <span class="tag">类型/创作</span>
+            <span class="tag">类型/人物</span>
+        </div>
+    </div>
+</section>
+
+<!-- PRACTICE -->
+<section id="practice">
+    <div class="container">
+        <div class="section-label">Practice</div>
+        <h2 class="section-title">日常实践指南</h2>
+        <p class="section-desc">从理论到行动，具体可执行的操作步骤。</p>
+
+        <div class="practice-timeline">
+            <div class="practice-item">
+                <h4>🌅 晨间捕获</h4>
+                <p>创建当日日记，记录晨间仪式（冥想、阅读、运动），捕获前夜灵感。每天的第一笔知识投资。</p>
+            </div>
+            <div class="practice-item">
+                <h4>📝 日间积累</h4>
+                <p>读到好内容 → 创建读书笔记。产生想法 → 创建洞察笔记。学到技能 → 创建技能卡片。每篇至少建立 2 个链接。</p>
+            </div>
+            <div class="practice-item">
+                <h4>🌙 晚间复盘</h4>
+                <p>更新日记完成情况，提炼当日关键洞察，检查待办事项。让每一天都有迹可循。</p>
+            </div>
+            <div class="practice-item">
+                <h4>📊 周度整理</h4>
+                <p>回顾本周笔记，建立新连接，检查三大项目进度，更新 MOC 索引。每周日 20:00 固定执行。</p>
+            </div>
+            <div class="practice-item">
+                <h4>🔍 月度维护</h4>
+                <p>运行断链巡检、标签审计、骨架文件清理。更新知识库健康度评分。预防优于修复。</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- HEALTH -->
+<section style="background: rgba(255,255,255,0.01);">
+    <div class="container" style="text-align: center;">
+        <div class="section-label">Quality</div>
+        <h2 class="section-title">健康度评分体系</h2>
+        <p class="section-desc" style="margin: 0 auto 2rem;">六维量化评估，持续迭代优化</p>
+
+        <div class="stats" style="max-width: 900px;">
+            <div class="stat">
+                <div class="num" style="font-size: 1.5rem;">20%</div>
+                <div class="label">Frontmatter 合规率</div>
+            </div>
+            <div class="stat">
+                <div class="num" style="font-size: 1.5rem;">20%</div>
+                <div class="label">标签覆盖率</div>
+            </div>
+            <div class="stat">
+                <div class="num" style="font-size: 1.5rem;">20%</div>
+                <div class="label">断链率</div>
+            </div>
+            <div class="stat">
+                <div class="num" style="font-size: 1.5rem;">15%</div>
+                <div class="label">孤立笔记率</div>
+            </div>
+            <div class="stat">
+                <div class="num" style="font-size: 1.5rem;">15%</div>
+                <div class="label">MOC 覆盖率</div>
+            </div>
+            <div class="stat">
+                <div class="num" style="font-size: 1.5rem;">10%</div>
+                <div class="label">结构一致性</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+    <h2>重塑自我，复利人生</h2>
+    <p>人机共生，智慧进化。从今天开始，用知识的复利驱动人生进化。</p>
+    <div class="hero-btns">
+        <a href="https://github.com/zhubao315/e-life-method" target="_blank" class="btn btn-primary">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+            查看完整方法论
+        </a>
+        <a href="#theory" class="btn btn-secondary">回到顶部 ↑</a>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+    <p>e-Life &mdash; 自主进化人生操作系统 &copy; 2026</p>
+    <p style="margin-top: 0.5rem;">
+        <a href="https://github.com/zhubao315" target="_blank">GitHub</a>
+    </p>
+</footer>
+
+<script>
+// Intersection Observer for fade-up animation
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+        }
+    });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.theory-card, .method-card, .practice-item, .stat, .pipeline-step').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'all 0.6s ease';
+    observer.observe(el);
+});
+</script>
+
+</body>
+</html>
