@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0a0a14"/>
+      <stop offset="100%" stop-color="#0d0d1a"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#d4a017"/>
+      <stop offset="100%" stop-color="#f0c040"/>
+    </linearGradient>
+    <linearGradient id="aurora" x1="0" y1="0" x2="0.5" y2="1">
+      <stop offset="0%" stop-color="#22d3ee" stop-opacity="0.3"/>
+      <stop offset="50%" stop-color="#a78bfa" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#d4a017" stop-opacity="0.15"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="1" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <!-- Background -->
+  <rect width="32" height="32" rx="6" fill="url(#bg)"/>
+  <!-- Aurora glow -->
+  <ellipse cx="16" cy="14" rx="14" ry="10" fill="url(#aurora)"/>
+  <!-- 'e' character - bold sans-serif style -->
+  <g filter="url(#glow)">
+    <!-- Main 'e' shape -->
+    <path d="M9 10.5 C9 8.5 10.5 7 13 7 C15.5 7 17 8.5 17 10.5 L17 11 L12 11 L12 14 L16 14 C16 14 17.2 16.5 15 18.5 C13.5 20 11 19.5 9.5 18 L11 16.5 C12 17.5 13.5 18 14.5 17.5 C15.5 17 15 15.5 14 14.5 L9 14.5 L9 10.5 Z" fill="url(#gold)"/>
+    <!-- Horizontal bar of e -->
+    <rect x="12" y="13.5" width="5" height="2" rx="1" fill="url(#gold)" opacity="0.9"/>
+    <!-- Infinity loop accent -->
+    <path d="M19 13 C19.5 11.5 21 11 22 12 C23 13 23 15 22 16 C21 17 19.5 16.5 19 15" fill="none" stroke="url(#gold)" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/>
+  </g>
+  <!-- Subtle corner glow -->
+  <circle cx="4" cy="4" r="6" fill="#22d3ee" opacity="0.06"/>
+  <circle cx="28" cy="28" r="5" fill="#d4a017" opacity="0.06"/>
+</svg>
